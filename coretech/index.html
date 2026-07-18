@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>CoreTech — экосистемы для медицинских сетей</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="CoreTech — экосистемы для медицинских сетей: сайты, приложения и интеграции с МИС. Демо-лендинг, портфолио-проект." />
+<meta name="theme-color" content="#000000" />
+<style>
+  :root{
+    --bg:#000000;
+    --bg-alt:#020102;
+    --violet:#6d28d9;
+    --surface:rgba(255,255,255,.045);
+    --surface-strong:rgba(255,255,255,.075);
+    --border:rgba(255,255,255,.11);
+    --border-strong:rgba(255,255,255,.18);
+    --text:#eaf2f0;
+    --text-dim:#93a4aa;
+    --text-faint:#5b6b71;
+    --accent:#2fe0c6;
+    --accent-2:#17a594;
+    --accent-glow:rgba(47,224,198,.28);
+    --danger:#ff7a63;
+    --danger-glow:rgba(255,122,99,.18);
+    --success:#a3e066;
+    --success-glow:rgba(163,224,102,.18);
+    --gold:#e8c072;
+    --font-display: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas, monospace;
+    --font-body: -apple-system, "Segoe UI", system-ui, Roboto, sans-serif;
+    --container:1240px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:var(--bg);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(47,224,198,.02) 0px, rgba(47,224,198,.02) 1px, transparent 1px, transparent 48px),
+      repeating-linear-gradient(90deg, rgba(47,224,198,.02) 0px, rgba(47,224,198,.02) 1px, transparent 1px, transparent 48px);
+    color:var(--text);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--accent-glow); color:var(--text); }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  h1,h2,h3,p,ul{ margin:0; }
+  .icon{ width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+  .icon-fill{ fill:currentColor; stroke:none; }
+
+  .container{
+    max-width:var(--container); margin:0 auto; padding:44px 36px; width:100%; position:relative; z-index:1;
+    border:1px solid rgba(47,224,198,.3); border-radius:28px;
+    background:rgba(255,255,255,.012);
+    animation:neonPulse 6s ease-in-out infinite;
+  }
+  @keyframes neonPulse{
+    0%,100%{ box-shadow:0 0 40px -14px rgba(47,224,198,.3), 0 0 90px -30px rgba(109,40,217,.28); border-color:rgba(47,224,198,.3); }
+    50%{ box-shadow:0 0 55px -12px rgba(47,224,198,.48), 0 0 110px -26px rgba(109,40,217,.38); border-color:rgba(47,224,198,.48); }
+  }
+  .section{ position:relative; padding:26px 0; scroll-margin-top:90px; }
+  .section:first-of-type{ padding-top:56px; }
+  .section-alt{ background:linear-gradient(180deg, transparent, rgba(255,255,255,.015) 18%, rgba(255,255,255,.015) 82%, transparent); }
+  .blobs{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+  .blob{ position:absolute; border-radius:50%; filter:blur(70px); opacity:.35; animation:blobDrift 17s ease-in-out infinite, pulseGlow 9s ease-in-out infinite; }
+
+  .eyebrow{ font-family:var(--font-mono); font-size:13.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:12px; }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--accent); }
+  .h2{ font-family:var(--font-display); font-weight:500; font-size:clamp(30px,4vw,46px); line-height:1.1; letter-spacing:-.01em; text-wrap:balance; color:var(--text); margin-top:16px; }
+  .lead{ font-size:16.5px; line-height:1.65; color:var(--text-dim); max-width:680px; margin-top:18px; }
+  .lead-lg{ font-size:19px; line-height:1.6; color:var(--text-dim); max-width:600px; }
+  .section-head{ max-width:820px; margin-bottom:36px; }
+  .accent-text{ color:var(--accent); }
+  .danger-text{ color:var(--danger); }
+  .success-text{ color:var(--success); }
+  .gold-text{ color:var(--gold); }
+  .mono{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+
+  .glass{
+    background:linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(47,224,198,.15); border-radius:20px;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.65), 0 0 18px -6px rgba(47,224,198,.14);
+  }
+  .pain-card, .mod-card, .team-card, .testi-card, .stat-tile{ transition:transform .25s ease, border-color .25s ease; }
+  .pain-card:hover, .mod-card:hover, .team-card:hover, .testi-card:hover, .stat-tile:hover{ transform:translateY(-4px); border-color:rgba(47,224,198,.34); }
+  @media (prefers-reduced-motion: reduce){
+    .pain-card:hover, .mod-card:hover, .team-card:hover, .testi-card:hover, .stat-tile:hover{ transform:none; }
+  }
+
+  .btn{ font-family:var(--font-body); font-size:14.5px; font-weight:600; padding:15px 28px; border-radius:12px; border:1px solid transparent; cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease; }
+  .btn-primary{ background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#04211d; box-shadow:0 20px 45px -18px var(--accent-glow); }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 26px 55px -16px var(--accent-glow); }
+  .btn-ghost{ background:rgba(255,255,255,.03); border-color:var(--border-strong); color:var(--text); backdrop-filter:blur(10px); }
+  .btn-ghost:hover{ border-color:var(--accent); color:var(--accent); }
+  .btn:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  .grid{ display:grid; gap:24px; }
+  .grid-2{ grid-template-columns:repeat(2,1fr); }
+  .grid-3{ grid-template-columns:repeat(3,1fr); }
+  .grid-4{ grid-template-columns:repeat(4,1fr); }
+  .grid-5{ grid-template-columns:repeat(5,1fr); }
+  .grid-6{ grid-template-columns:repeat(6,1fr); }
+  @media(max-width:980px){ .grid-2,.grid-3,.grid-4,.grid-5,.grid-6{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:640px){ .grid-2,.grid-3,.grid-4,.grid-5,.grid-6{ grid-template-columns:1fr; } }
+
+  @keyframes float{ 0%,100%{ transform:translateY(0) rotate(var(--r,0deg)); } 50%{ transform:translateY(-20px) rotate(var(--r,0deg)); } }
+  @keyframes floatSlow{ 0%,100%{ transform:translateY(0) rotate(var(--r,0deg)); } 50%{ transform:translateY(-12px) rotate(var(--r,0deg)); } }
+  @keyframes pulseGlow{ 0%,100%{ opacity:.28; } 50%{ opacity:.5; } }
+  @keyframes blobDrift{
+    0%{ transform:translate(0,0) scale(1); }
+    33%{ transform:translate(26px,-20px) scale(1.05); }
+    66%{ transform:translate(-20px,16px) scale(.97); }
+    100%{ transform:translate(0,0) scale(1); }
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @keyframes pulseValue{ 0%,100%{ text-shadow:0 0 0 transparent; } 50%{ text-shadow:0 0 20px currentColor; } }
+  @keyframes floatCard{ 0%,100%{ transform:translateY(-16px); } 50%{ transform:translateY(-27px); } }
+  .float{ animation:float 6.5s ease-in-out infinite; }
+  .float-slow{ animation:floatSlow 9s ease-in-out infinite; }
+  .float-delay{ animation-delay:-3s; }
+  .icon-spin{ animation:spin 7s linear infinite; }
+  .pulse-val{ animation:pulseValue 3.2s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce){
+    .float,.float-slow,.blob,.icon-spin,.pulse-val,.container{ animation:none !important; }
+    .price-card.mid{ animation:none !important; transform:translateY(-16px) !important; }
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1 !important; transform:none !important; }
+  }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- nav ---------- */
+  .nav{ position:fixed; top:0; left:0; right:0; z-index:50; background:rgba(9,13,22,.62); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+  .nav-inner{ max-width:var(--container); margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ font-family:var(--font-mono); font-size:14px; letter-spacing:.06em; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; cursor:pointer; }
+  .brand i{ width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent-glow); display:inline-block; animation:dotPulse 2.6s ease-in-out infinite; }
+  @keyframes dotPulse{ 0%,100%{ box-shadow:0 0 8px var(--accent-glow); opacity:1; } 50%{ box-shadow:0 0 16px var(--accent-glow); opacity:.65; } }
+  .nav-links{ display:flex; gap:28px; font-size:15px; color:var(--text-dim); }
+  .nav-links a{ transition:color .15s ease; position:relative; }
+  .nav-links a:hover{ color:var(--accent); }
+  .nav-links a.active{ color:var(--accent); }
+  .nav-links a.active::after{ content:""; position:absolute; left:0; right:0; bottom:-6px; height:1px; background:var(--accent); box-shadow:0 0 6px var(--accent-glow); }
+  .nav-links a:focus-visible, .footer-links a:focus-visible, .brand:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  @media(max-width:880px){ .nav-links{ display:none; } }
+  @media (prefers-reduced-motion: reduce){ .brand i{ animation:none; } }
+  .nav-progress{ position:absolute; bottom:-1px; left:0; height:2px; width:0%; background:var(--accent); box-shadow:0 0 8px var(--accent-glow); }
+
+  /* ---------- hero ---------- */
+  .hero-grid{ display:grid; grid-template-columns:1.15fr 1fr; gap:56px; align-items:center; }
+  @media(max-width:980px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-card-back, .hero-chip{ display:none; }
+  }
+  .hero-stats{ display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:30px; font-family:var(--font-mono); font-size:14px; color:var(--text-dim); }
+  .hero-stats span.dot{ color:var(--border-strong); }
+  .hero-ctas{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+  .hero-visual{ position:relative; height:520px; display:flex; align-items:center; justify-content:center; }
+  .phone{ width:260px; height:528px; background:#03060a; border:9px solid #0c161a; border-radius:44px; position:relative; box-shadow:0 50px 100px -20px rgba(0,0,0,.75), 0 0 60px -8px var(--accent-glow); z-index:2; }
+  .phone::before{ content:""; position:absolute; top:16px; left:50%; transform:translateX(-50%); width:70px; height:6px; border-radius:4px; background:#0c161a; }
+  .phone-scr{ position:absolute; inset:13px; border-radius:36px; background:linear-gradient(175deg,#0b1a1e,#0c2226); overflow:hidden; padding:28px 18px 18px; display:flex; flex-direction:column; gap:14px; }
+  .phone-title{ font-size:14.5px; font-weight:700; }
+  .phone-sub{ font-size:12px; color:var(--text-faint); margin-top:-10px; }
+  .cal-row{ display:flex; justify-content:space-between; }
+  .cal-cell{ width:27px; height:36px; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:9px; color:var(--text-faint); }
+  .cal-cell b{ font-size:12.5px; color:var(--text-dim); }
+  .cal-cell.sel{ background:var(--accent); color:#04211d; }
+  .cal-cell.sel b{ color:#04211d; }
+  .slot{ display:flex; align-items:center; justify-content:space-between; padding:10px 13px; border-radius:9px; border:1px solid var(--border); font-size:12.5px; color:var(--text-dim); }
+  .slot.on{ border-color:var(--accent); color:var(--text); background:rgba(47,224,198,.08); }
+  .phone-cta{ margin-top:auto; background:var(--accent); color:#04211d; text-align:center; padding:13px; border-radius:12px; font-size:14px; font-weight:700; }
+  .hero-card-back{ position:absolute; width:260px; padding:20px; z-index:1; right:-10px; bottom:40px; }
+  .hero-card-back .kpi{ font-family:var(--font-mono); font-size:26px; color:var(--success); font-variant-numeric:tabular-nums; }
+  .hero-card-back .kpi-lbl{ font-size:12.5px; color:var(--text-faint); margin-top:4px; }
+  .hero-chip{ position:absolute; left:-30px; top:56px; z-index:3; display:flex; gap:8px; align-items:center; padding:10px 14px; font-size:13px; }
+  .hero-chip .icon{ width:15px; height:15px; color:var(--accent); }
+  .scroll-hint{ display:flex; flex-direction:column; align-items:center; gap:6px; margin:64px auto 0; color:var(--text-faint); font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; }
+
+  /* ---------- pains ---------- */
+  .pain-card{ padding:30px; display:flex; flex-direction:column; gap:14px; height:100%; }
+  .pain-icon{ width:44px; height:44px; border-radius:12px; background:rgba(255,122,99,.1); display:flex; align-items:center; justify-content:center; color:var(--danger); }
+  .pain-title{ font-family:var(--font-display); font-size:19px; color:var(--text); }
+  .pain-text{ font-size:15px; color:var(--text-dim); line-height:1.6; }
+  .pain-stat{ margin-top:auto; padding-top:12px; border-top:1px solid var(--border); font-family:var(--font-mono); font-size:14.5px; color:var(--danger); }
+  .loss-bar{ margin-top:32px; padding:26px 30px; display:flex; align-items:center; gap:26px; flex-wrap:wrap; justify-content:space-between; }
+  .loss-bar .big{ font-family:var(--font-mono); font-size:38px; color:var(--danger); }
+
+  /* ---------- solution ---------- */
+  .mod-card{ padding:30px; display:flex; flex-direction:column; gap:14px; }
+  .mod-icon{ width:46px; height:46px; border-radius:12px; background:rgba(47,224,198,.1); display:flex; align-items:center; justify-content:center; color:var(--accent); }
+  .mod-tag{ font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; color:var(--text-faint); }
+  .mod-title{ font-family:var(--font-display); font-size:21px; }
+  .mod-text{ font-size:15px; color:var(--text-dim); line-height:1.62; }
+  .mod-stack{ margin-top:auto; padding-top:14px; border-top:1px solid var(--border); font-family:var(--font-mono); font-size:12.5px; color:var(--accent); }
+
+  .flow{ margin-top:20px; display:flex; align-items:flex-start; gap:0; }
+  .flow-step{ flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; padding:0 6px; }
+  .flow-num{ width:34px; height:34px; border-radius:50%; border:1px solid var(--accent); color:var(--accent); font-family:var(--font-mono); font-size:14.5px; display:flex; align-items:center; justify-content:center; }
+  .flow-step p{ font-size:13.5px; color:var(--text-dim); line-height:1.45; }
+  .flow-arrow-h{ width:34px; height:1px; background:var(--border-strong); margin-top:17px; position:relative; }
+  .flow-arrow-h::after{ content:""; position:absolute; right:0; top:-3px; width:6px; height:6px; border-top:1px solid var(--accent); border-right:1px solid var(--accent); transform:rotate(45deg); }
+  @media(max-width:820px){ .flow{ flex-direction:column; align-items:stretch; } .flow-arrow-h{ width:1px; height:24px; margin:4px auto; } }
+
+  .adv-row{ margin-top:26px; display:flex; flex-wrap:wrap; gap:14px; }
+  .adv-pill{ font-family:var(--font-mono); font-size:13px; color:var(--accent); border:1px solid rgba(47,224,198,.32); background:rgba(47,224,198,.06); padding:10px 16px; border-radius:22px; display:flex; align-items:center; gap:8px; }
+  .adv-pill .icon{ width:14px; height:14px; }
+
+  /* ---------- numbers ---------- */
+  .case-narrative{ padding:34px; margin-bottom:26px; }
+  .case-narrative p + p{ margin-top:14px; }
+  .case-narrative p{ font-size:14.5px; line-height:1.7; color:var(--text-dim); }
+  .stat-tile{ padding:26px 22px; }
+  .stat-tile .val{ font-family:var(--font-mono); font-size:32px; color:var(--success); font-variant-numeric:tabular-nums; }
+  .stat-tile .lbl{ font-size:13.5px; color:var(--text-faint); margin-top:8px; }
+  .quote-card{ margin-top:24px; padding:30px 34px; display:flex; gap:20px; align-items:flex-start; }
+  .quote-card .icon{ color:var(--accent); width:26px; height:26px; margin-top:3px; }
+  .quote-card p{ font-family:var(--font-display); font-style:italic; font-size:16.5px; line-height:1.6; color:var(--text); }
+  .quote-card cite{ display:block; margin-top:12px; font-family:var(--font-mono); font-style:normal; font-size:13px; letter-spacing:.04em; color:var(--text-faint); }
+  .mini-stats-bar{ margin-top:26px; display:flex; flex-wrap:wrap; gap:8px 26px; font-family:var(--font-mono); font-size:13.5px; color:var(--text-dim); }
+
+  /* ---------- timeline ---------- */
+  .tl{ position:relative; padding-left:52px; }
+  .tl::before{ content:""; position:absolute; left:17px; top:6px; bottom:6px; width:1px; background:linear-gradient(180deg,var(--accent),var(--success)); }
+  .tl-item{ position:relative; padding-bottom:44px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-dot{ position:absolute; left:-52px; top:0; width:36px; height:36px; border-radius:50%; background:var(--bg-alt); border:1px solid var(--accent); color:var(--accent); display:flex; align-items:center; justify-content:center; }
+  .tl-week{ font-family:var(--font-mono); font-size:12.5px; color:var(--accent); letter-spacing:.06em; }
+  .tl-title{ font-family:var(--font-display); font-size:21px; margin-top:6px; }
+  .tl-text{ font-size:15px; color:var(--text-dim); line-height:1.62; margin-top:10px; max-width:640px; }
+  .tl-deliv{ margin-top:12px; display:inline-flex; gap:8px; align-items:center; font-family:var(--font-mono); font-size:12.5px; color:var(--text-faint); border:1px solid var(--border); padding:7px 12px; border-radius:18px; }
+  .tl-deliv .icon{ width:13px; height:13px; color:var(--success); }
+
+  /* ---------- pricing ---------- */
+  .price-card{ padding:32px 28px; display:flex; flex-direction:column; gap:18px; position:relative; }
+  .price-card.mid{ border-color:var(--accent); animation:floatCard 7s ease-in-out infinite; box-shadow:0 40px 90px -24px var(--accent-glow); background:linear-gradient(160deg, rgba(47,224,198,.08), rgba(255,255,255,.02)); }
+  @media(max-width:980px){ .price-card.mid{ transform:none; animation:none; } }
+  .price-ribbon{ position:absolute; top:-14px; left:28px; background:var(--accent); color:#04211d; font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em; padding:6px 12px; border-radius:20px; font-weight:700; }
+  .price-tier{ font-family:var(--font-display); font-size:22px; }
+  .price-for{ font-size:14px; color:var(--text-faint); line-height:1.5; }
+  .price-val{ font-family:var(--font-mono); font-size:32px; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .price-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:14px; flex:1; }
+  .price-list li{ display:flex; gap:10px; }
+  .price-list .icon{ width:15px; height:15px; color:var(--accent); flex-shrink:0; margin-top:3px; }
+  .price-list b{ display:block; font-size:14.5px; color:var(--text); }
+  .price-list span{ display:block; font-size:13.5px; color:var(--text-dim); line-height:1.5; margin-top:2px; }
+  .price-foot{ font-family:var(--font-mono); font-size:12.5px; color:var(--text-faint); border-top:1px solid var(--border); padding-top:14px; }
+  .installment{ margin-top:28px; padding:24px 30px; }
+  .inst-bar{ display:flex; height:30px; border-radius:8px; overflow:hidden; }
+  .inst-seg{ display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:12.5px; font-weight:700; }
+  .inst-seg:nth-child(1){ background:var(--accent); flex:40; color:#04211d; }
+  .inst-seg:nth-child(2){ background:var(--accent-2); flex:40; color:#03130f; }
+  .inst-seg:nth-child(3){ background:rgba(255,255,255,.05); flex:20; color:var(--text-dim); border:1px solid var(--border); }
+  .inst-caption{ margin-top:10px; font-size:13.5px; color:var(--text-faint); }
+
+  /* ---------- team & trust ---------- */
+  .team-card{ padding:26px; display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
+  .avatar{ width:60px; height:60px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:19px; color:#04211d; font-weight:600; }
+  .team-name{ font-size:15px; font-weight:700; color:var(--text); }
+  .team-role{ font-family:var(--font-mono); font-size:12.5px; color:var(--accent); margin-top:2px; }
+  .team-bio{ font-size:14px; color:var(--text-dim); line-height:1.55; }
+  .testi-card{ padding:26px; display:flex; flex-direction:column; gap:14px; height:100%; }
+  .testi-card p{ font-family:var(--font-display); font-style:italic; font-size:14px; color:var(--text); line-height:1.6; flex:1; }
+  .testi-who{ display:flex; align-items:center; gap:12px; }
+  .testi-avatar{ width:38px; height:38px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:14.5px; font-weight:600; color:#04211d; }
+  .testi-name{ font-size:14px; font-weight:700; }
+  .testi-role{ font-size:12.5px; color:var(--text-faint); }
+  .trust-strip{ margin-top:36px; padding-top:28px; border-top:1px solid var(--border); }
+  .trust-lbl{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:.1em; color:var(--text-faint); text-transform:uppercase; margin-bottom:20px; }
+  .trust-logos{ display:flex; flex-wrap:wrap; gap:16px 34px; align-items:center; }
+  .trust-logos span{ font-family:var(--font-display); font-size:17px; color:var(--text-faint); }
+  .compliance-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+  .compliance-pill{ font-family:var(--font-mono); font-size:12px; color:var(--text-dim); border:1px solid var(--border); padding:7px 12px; border-radius:16px; }
+
+  /* ---------- footer / lead form ---------- */
+  .lead-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+  @media(max-width:980px){ .lead-grid{ grid-template-columns:1fr; } }
+  .lead-trust{ display:flex; flex-direction:column; gap:14px; margin-top:34px; }
+  .lead-trust-item{ display:flex; gap:12px; align-items:flex-start; font-size:15px; color:var(--text-dim); }
+  .lead-trust-item .icon{ color:var(--accent); width:17px; height:17px; margin-top:2px; }
+  .form-card{ padding:34px; }
+  .field{ display:flex; flex-direction:column; gap:7px; margin-bottom:18px; }
+  .field label{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:.05em; color:var(--text-faint); text-transform:uppercase; }
+  .field input, .field select, .field textarea{
+    background:rgba(255,255,255,.03); border:1px solid var(--border-strong); border-radius:10px; padding:13px 15px;
+    color:var(--text); font-family:var(--font-body); font-size:14px; outline:none; transition:border-color .15s ease, background .15s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--accent); background:rgba(47,224,198,.04); }
+  .field textarea{ resize:vertical; min-height:88px; font-family:var(--font-body); }
+  .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:520px){ .form-row{ grid-template-columns:1fr; } }
+  .form-note{ font-size:12.5px; color:var(--text-faint); margin-top:14px; line-height:1.5; }
+  .form-success{ display:none; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:40px 20px; }
+  .form-success .icon{ width:44px; height:44px; color:var(--success); }
+  .form-success.show{ display:flex; }
+  .form-body.hide{ display:none; }
+
+  .footer-bottom{ margin-top:56px; padding-top:36px; border-top:1px solid var(--border); }
+  .footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:36px; }
+  @media(max-width:820px){ .footer-grid{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:520px){ .footer-grid{ grid-template-columns:1fr; } }
+  .footer-col-title{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint); margin-bottom:16px; }
+  .footer-links{ display:flex; flex-direction:column; gap:10px; font-size:15px; color:var(--text-dim); }
+  .footer-links a{ display:flex; align-items:center; gap:9px; transition:color .15s ease; }
+  .footer-links a:hover{ color:var(--accent); }
+  .footer-links a .icon{ color:var(--accent); width:15px; height:15px; }
+  .footer-legal{ margin-top:50px; padding-top:24px; border-top:1px solid var(--border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:13.5px; color:var(--text-faint); }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="brand"><i></i>CoreTech</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#pains">Проблема</a>
+      <a href="#solution">Решение</a>
+      <a href="#case">Кейс</a>
+      <a href="#process">Процесс</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#team">Команда</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <a href="#contact" class="btn btn-primary" style="padding:11px 20px;font-size:14.5px;">Обсудить проект</a>
+  </div>
+  <div class="nav-progress" id="navProgress"></div>
+</div>
+
+<!-- SECTION 1 — HERO -->
+<section class="section" id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="reveal in">
+        <div class="eyebrow">CoreTech · Экосистемы для медицинских сетей</div>
+        <h1 class="h2" style="font-size:clamp(34px,5vw,58px);">Мы строим цифровые экосистемы, которые не теряют пациентов на полпути к записи</h1>
+        <p class="lead-lg" style="margin-top:22px;">CoreTech — IT-агентство полного цикла для сетей медицинских клиник. Мы проектируем сайты, мобильные приложения и интеграции с МИС/CRM, которые выдерживают реальную нагрузку сотен тысяч пациентов и синхронизируются с расписанием врача в реальном времени. За 6 лет мы вывели 14 медицинских сетей на новую цифровую платформу — без даунтайма регистратуры, без потери исторических данных и без недельных простоев на этапе миграции.</p>
+        <div class="hero-ctas">
+          <a href="#contact" class="btn btn-primary">Обсудить проект<svg class="icon" style="width:16px;height:16px;"><use href="#i-arrow"/></svg></a>
+          <a href="#case" class="btn btn-ghost">Смотреть кейс: −52% брошенных заявок</a>
+        </div>
+        <div class="hero-stats">
+          <span><b class="accent-text mono">6 лет</b> на рынке медтеха</span><span class="dot">·</span>
+          <span><b class="accent-text mono">14</b> сетей клиник</span><span class="dot">·</span>
+          <span><b class="accent-text mono">180+</b> интеграций с МИС</span><span class="dot">·</span>
+          <span><b class="accent-text mono">99,9%</b> uptime</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="glass hero-card-back float-slow float-delay">
+          <div class="kpi pulse-val">+40%</div>
+          <div class="kpi-lbl">рост онлайн-записи после внедрения экосистемы CoreTech</div>
+        </div>
+        <div class="phone float">
+          <div class="phone-scr">
+            <div class="phone-title">Запись к врачу</div>
+            <div class="phone-sub">МедЭксперт · Терапевт</div>
+            <div class="cal-row">
+              <div class="cal-cell"><span>Пн</span><b>14</b></div>
+              <div class="cal-cell"><span>Вт</span><b>15</b></div>
+              <div class="cal-cell sel"><span>Ср</span><b>16</b></div>
+              <div class="cal-cell"><span>Чт</span><b>17</b></div>
+              <div class="cal-cell"><span>Пт</span><b>18</b></div>
+            </div>
+            <div class="slot">09:30<span>—</span></div>
+            <div class="slot on">11:00<span>Выбрано</span></div>
+            <div class="slot">14:15<span>—</span></div>
+            <div class="phone-cta">Записаться</div>
+          </div>
+        </div>
+        <div class="glass hero-chip float-slow">
+          <svg class="icon icon-spin"><use href="#i-sync"/></svg>Синхронизировано с МИС
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint reveal in">
+      <span>ЛИСТАЙТЕ ВНИЗ</span>
+      <svg class="icon" style="width:16px;height:16px;"><use href="#i-chevron"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 — PAINS -->
+<section class="section section-alt" id="pains">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Диагностика рынка</div>
+      <h2 class="h2">Почему сети клиник теряют деньги на цифровых каналах</h2>
+      <p class="lead">Пациенты сегодня бронируют приём так же, как заказывают такси — ожидая мгновенного подтверждения и без единой лишней секунды ожидания. Клиника на устаревшей платформе не получает жалоб на это — пациент просто закрывает вкладку и уходит к агрегатору или в соседнюю сеть. Мы проанализировали путь пациента в десятках региональных сетей и стабильно находим одни и те же шесть утечек.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="glass pain-card reveal">
+        <div class="pain-icon"><svg class="icon"><use href="#i-clock"/></svg></div>
+        <div class="pain-title">Медленные сайты убивают конверсию</div>
+        <p class="pain-text">Больше 70% пациентов заходят с мобильного в дороге или между делами. Если форма записи не прогружается за 2–3 секунды, пользователь не станет ждать и не напишет жалобу — он просто закроет вкладку. На устаревших платформах это происходит систематически, ещё до того, как пациент увидел расписание врача.</p>
+        <div class="pain-stat">7,8 сек — средняя загрузка страницы записи против нормы 2,5 сек</div>
+      </div>
+
+      <div class="glass pain-card reveal">
+        <div class="pain-icon"><svg class="icon"><use href="#i-cart"/></svg></div>
+        <div class="pain-title">Сайт и расписание врача живут в разных мирах</div>
+        <p class="pain-text">Когда сайт не связан с МИС напрямую, слот на 11:00 может «висеть» свободным ещё час после того, как его заняли по телефону. Пациент выбирает время, доходит до оплаты — и получает ошибку. Второй попытки чаще всего не будет.</p>
+        <div class="pain-stat">68% брошенных заявок — на этапе выбора актуального времени приёма</div>
+      </div>
+
+      <div class="glass pain-card reveal">
+        <div class="pain-icon"><svg class="icon"><use href="#i-phone"/></svg></div>
+        <div class="pain-title">Регистратура тонет в ручных звонках</div>
+        <p class="pain-text">Без автоматических напоминаний администраторы вручную обзванивают пациентов, чтобы подтвердить или перенести визит. Это время не идёт на живое общение с людьми в клинике, а сама процедура подвержена человеческим ошибкам — переносам не в ту дату, дублям записи.</p>
+        <div class="pain-stat">42% времени администратора — на телефонные подтверждения, которые может делать приложение</div>
+      </div>
+
+      <div class="glass pain-card reveal">
+        <div class="pain-icon"><svg class="icon"><use href="#i-star"/></svg></div>
+        <div class="pain-title">Приложение, в которое стыдно кого-то отправить</div>
+        <p class="pain-text">Низкий рейтинг в сторе — не абстрактная метрика: это первое, что видит новый пациент перед установкой. Отзывы про зависания при оплате и пропавшие записи читают именно те, кого клиника пытается привлечь рекламой.</p>
+        <div class="pain-stat">2,9★ у региональных сетей против 4,6–4,8★ у федеральных игроков</div>
+      </div>
+
+      <div class="glass pain-card reveal">
+        <div class="pain-icon"><svg class="icon"><use href="#i-shield"/></svg></div>
+        <div class="pain-title">Данные пациента разбросаны по трём системам</div>
+        <p class="pain-text">МИС, CRM для маркетинга и бухгалтерская система нередко не связаны между собой. Это приводит к ошибкам в биллинге, дублированию карт пациентов и невозможности посчитать реальный LTV — руководство принимает решения вслепую.</p>
+        <div class="pain-stat">До 3 несовпадающих карт на одного пациента в сетях без единой базы</div>
+      </div>
+
+      <div class="glass pain-card reveal">
+        <div class="pain-icon"><svg class="icon"><use href="#i-users"/></svg></div>
+        <div class="pain-title">Агрегаторы забирают ваш собственный трафик</div>
+        <p class="pain-text">Когда своя запись работает хуже, чем ДокДокДок или СберЗдоровье, пациенты уходят бронировать приём через агрегатор — а клиника платит комиссию за пациента, которого и так могла получить напрямую.</p>
+        <div class="pain-stat">До 18% выручки — комиссия агрегаторам при слабых собственных каналах</div>
+      </div>
+    </div>
+
+    <div class="glass loss-bar reveal">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:13.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;">Расчётные суммарные потери</div>
+        <div style="font-size:14px;color:var(--text-dim);margin-top:6px;max-width:520px;">Для сети из 12 филиалов при среднем чеке 3 200 ₽ и трафике 14 000 визитов в месяц на форму записи</div>
+      </div>
+      <div class="big mono pulse-val">4,1 млн ₽ <span style="font-size:15px;color:var(--text-faint);font-family:var(--font-body);">/ месяц</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 — SOLUTION -->
+<section class="section" id="solution">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Наше решение</div>
+      <h2 class="h2">Экосистема «Клиника 2.0» — три модуля, один источник правды</h2>
+      <p class="lead">Мы не переделываем вам сайт. Мы проектируем весь путь пациента — от первого клика в поиске до карты приёма у врача — как единую систему, где сайт, приложение и МИС обмениваются данными в реальном времени, а не раз в сутки через выгрузку в Excel.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="glass mod-card reveal">
+        <div class="mod-icon"><svg class="icon"><use href="#i-globe"/></svg></div>
+        <div class="mod-tag">MOD.01 · WEB</div>
+        <div class="mod-title">Сайт</div>
+        <p class="mod-text">Серверный рендеринг и жёсткий бюджет производительности держат загрузку в пределах 1,8 секунды даже на слабом мобильном интернете. Форма записи адаптируется под устройство и доводит пациента от выбора врача до подтверждённого слота за три клика. Структурированные данные и локальная SEO-разметка выводят филиалы в топ карт Яндекса и Google по запросам «клиника рядом».</p>
+        <div class="mod-stack">Next.js · Node.js · Yandex Cloud CDN · Core Web Vitals green zone</div>
+      </div>
+
+      <div class="glass mod-card reveal">
+        <div class="mod-icon"><svg class="icon"><use href="#i-app"/></svg></div>
+        <div class="mod-tag">MOD.02 · MOBILE</div>
+        <div class="mod-title">Приложение</div>
+        <p class="mod-text">Нативные приложения для iOS и Android с электронной картой пациента, push-напоминаниями, которые сокращают неявки, и встроенной телемедициной на WebRTC для повторных консультаций. Оплата — через СБП и банковский эквайринг, без переходов во внешние окна, которые обычно и обрывают конверсию на последнем шаге.</p>
+        <div class="mod-stack">Swift · Kotlin · WebRTC для телемедицины · СБП и эквайринг</div>
+      </div>
+
+      <div class="glass mod-card reveal">
+        <div class="mod-icon"><svg class="icon"><use href="#i-sync"/></svg></div>
+        <div class="mod-tag">MOD.03 · INTEGRATION</div>
+        <div class="mod-title">Интеграция с МИС/CRM</div>
+        <p class="mod-text">Событийная архитектура на очереди сообщений синхронизирует расписание врача между сайтом, приложением и МИС клиники за секунды, а не часы. Мы уже строили адаптеры для «МедЭлемент», Renovatio, «Инфоклиники» и 1С:Медицина — данные пациента приводятся к единому формату и хранятся в одной базе вместо трёх разрозненных.</p>
+        <div class="mod-stack">Kafka-очередь событий · REST/FHIR-адаптеры · шифрование по 152-ФЗ</div>
+      </div>
+    </div>
+
+    <h3 class="h2" style="font-size:26px;margin-top:40px;">Как это работает на практике</h3>
+    <div class="flow reveal">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <p>Пациент бронирует слот в приложении или на сайте</p>
+      </div>
+      <div class="flow-arrow-h"></div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <p>Событие мгновенно уходит в очередь интеграционного слоя</p>
+      </div>
+      <div class="flow-arrow-h"></div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <p>МИС обновляет расписание врача и блокирует слот на всех остальных каналах</p>
+      </div>
+      <div class="flow-arrow-h"></div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <p>Администратор и пациент получают синхронное подтверждение</p>
+      </div>
+    </div>
+
+    <div class="adv-row">
+      <div class="adv-pill"><svg class="icon"><use href="#i-bolt"/></svg>Uptime 99,9%</div>
+      <div class="adv-pill"><svg class="icon"><use href="#i-sync"/></svg>Отклик API &lt;200 мс</div>
+      <div class="adv-pill"><svg class="icon"><use href="#i-shield"/></svg>Аудит по 152-ФЗ</div>
+      <div class="adv-pill"><svg class="icon"><use href="#i-layers"/></svg>Горизонтальное масштабирование под пиковую нагрузку</div>
+      <div class="adv-pill"><svg class="icon"><use href="#i-users"/></svg>Поддержка 24/7</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 — NUMBERS / CASE -->
+<section class="section section-alt" id="case">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Кейс в цифрах</div>
+      <h2 class="h2">«Ваш Доктор»: как 14 филиалов перестали терять пациентов за 11 недель</h2>
+    </div>
+
+    <div class="glass case-narrative reveal">
+      <p>К нам обратилась сеть клиник «Ваш Доктор» с классической болью растущей региональной сети: приложение с рейтингом 2,7★, 61% брошенных заявок на этапе оплаты и растущий отток пациентов к клиникам-агрегаторам, где запись занимала вдвое меньше времени. Внутренняя МИС «МедЭлемент» обновляла расписание на сайте раз в сутки — вручную, силами одного администратора.</p>
+      <p>Мы начали с двухнедельного аудита пути пациента и технического интерфейса МИС, спроектировали дизайн-систему за две недели и параллельно вели разработку сайта, приложения и интеграционного слоя — с еженедельными демо для команды клиники. Пилотный запуск прошёл на двух филиалах, полный роллаут — на все 14 через 11 недель после старта проекта.</p>
+      <p>Сегодня, спустя 8 месяцев после запуска, «Ваш Доктор» — наш постоянный партнёр: мы ведём ежеквартальные доработки и сопровождаем два новых филиала сети на этапе открытия.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="glass stat-tile reveal"><div class="val">+40%</div><div class="lbl">Онлайн-записей за 3 месяца после запуска</div></div>
+      <div class="glass stat-tile reveal"><div class="val">−52%</div><div class="lbl">Брошенных заявок на этапе оплаты</div></div>
+      <div class="glass stat-tile reveal"><div class="val">3,2→1,6с</div><div class="lbl">Среднее время загрузки страницы записи</div></div>
+      <div class="glass stat-tile reveal"><div class="val">2,7→4,7★</div><div class="lbl">Рейтинг приложения за 4 месяца</div></div>
+      <div class="glass stat-tile reveal"><div class="val">−37%</div><div class="lbl">Звонков в регистратуру на подтверждение записи</div></div>
+      <div class="glass stat-tile reveal"><div class="val">5,5 мес</div><div class="lbl">Окупаемость проекта для сети</div></div>
+    </div>
+
+    <div class="glass quote-card reveal">
+      <svg class="icon"><use href="#i-quote"/></svg>
+      <div>
+        <p>«Мы перестали терять пациентов на этапе записи. Раньше администраторы обзванивали "отвалившихся" вручную каждый вечер — теперь система делает это сама, а мы просто видим итоговую статистику по каждому филиалу. CoreTech остались с нами и после сдачи проекта — это редкость для подрядчика такого уровня».</p>
+        <cite>Наталья Ким — директор по цифровому развитию, сеть клиник «Ваш Доктор»</cite>
+      </div>
+    </div>
+
+    <div class="mini-stats-bar reveal">
+      <span>За 6 лет: <b class="accent-text">14</b> внедрений</span>
+      <span>Средний прирост онлайн-записи: <b class="accent-text">+34%</b></span>
+      <span>Средняя окупаемость: <b class="accent-text">6,2 мес</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5 — PROCESS / TIMELINE -->
+<section class="section" id="process">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Как мы работаем</div>
+      <h2 class="h2">От диагноза до запуска — прозрачный процесс в пять этапов</h2>
+      <p class="lead">Каждый этап закрывается предъявляемым результатом — демо, отчётом или обученной командой — а не устным обещанием «мы работаем над этим».</p>
+    </div>
+
+    <div class="tl reveal">
+      <div class="tl-item">
+        <div class="tl-dot"><svg class="icon" style="width:17px;height:17px;"><use href="#i-search"/></svg></div>
+        <div class="tl-week">НЕДЕЛИ 1–2</div>
+        <div class="tl-title">Аналитика и UX-исследование</div>
+        <p class="tl-text">Мы аудируем воронку записи на всех текущих каналах, проводим интервью с администраторами регистратуры и 15–20 пациентами, разбираем техническую документацию действующей МИС и фиксируем все точки, где сейчас теряются заявки.</p>
+        <div class="tl-deliv"><svg class="icon"><use href="#i-check"/></svg>Карта пути пациента и техническое ТЗ на интеграцию</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><svg class="icon" style="width:17px;height:17px;"><use href="#i-palette"/></svg></div>
+        <div class="tl-week">НЕДЕЛИ 3–4</div>
+        <div class="tl-title">Дизайн-система</div>
+        <p class="tl-text">Собираем UI-кит на основе фирменного стиля клиники и превращаем его в кликабельный прототип сайта и приложения. Прототип проходит согласование с главным врачом и маркетинг-директором до того, как в разработку уйдёт первая строка кода.</p>
+        <div class="tl-deliv"><svg class="icon"><use href="#i-check"/></svg>UI-кит и согласованный интерактивный прототип</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><svg class="icon" style="width:17px;height:17px;"><use href="#i-code"/></svg></div>
+        <div class="tl-week">НЕДЕЛИ 5–9</div>
+        <div class="tl-title">Разработка</div>
+        <p class="tl-text">Фронтенд, бэкенд и интеграционный модуль разрабатываются параллельно тремя потоками. Каждую пятницу команда клиники видит рабочую версию на демо-стенде — без сюрпризов и «черного ящика» в середине проекта.</p>
+        <div class="tl-deliv"><svg class="icon"><use href="#i-check"/></svg>Рабочий стенд на тестовом контуре</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><svg class="icon" style="width:17px;height:17px;"><use href="#i-shield"/></svg></div>
+        <div class="tl-week">НЕДЕЛИ 10–11</div>
+        <div class="tl-title">Тестирование</div>
+        <p class="tl-text">Нагрузочное тестирование эмулирует пиковый утренний трафик — до 5 000 одновременных пользователей. Параллельно запускаем пилот на двух филиалах, чтобы увидеть реальное поведение регистратуры до полного роллаута.</p>
+        <div class="tl-deliv"><svg class="icon"><use href="#i-check"/></svg>Отчёт нагрузочного тестирования и пилот на 2 филиалах</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:var(--success);color:var(--success);"><svg class="icon" style="width:17px;height:17px;"><use href="#i-rocket"/></svg></div>
+        <div class="tl-week">НЕДЕЛЯ 12+</div>
+        <div class="tl-title">Запуск и поддержка</div>
+        <p class="tl-text">Роллаут на все филиалы сопровождается очными и онлайн-сессиями обучения для администраторов. Три месяца гарантийной поддержки входят в проект — мы остаёмся на связи, пока команда клиники не почувствует себя уверенно в новой системе.</p>
+        <div class="tl-deliv"><svg class="icon"><use href="#i-check"/></svg>Обученный персонал и SLA на постпроектную поддержку</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6 — PRICING -->
+<section class="section section-alt" id="pricing">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Условия сотрудничества</div>
+      <h2 class="h2">Три уровня инвестиции — выберите глубину трансформации</h2>
+      <p class="lead">Каждый пакет закрывает полный цикл: от аналитики до обучения персонала. Разница — в глубине интеграции и уровне сопровождения после запуска.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="glass price-card reveal">
+        <div>
+          <div class="price-tier">Старт</div>
+          <div class="price-for">Для сети из 1–4 филиалов, которой нужен цифровой фундамент без избыточной сложности</div>
+        </div>
+        <div class="price-val">3 900 000 ₽</div>
+        <ul class="price-list">
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Редизайн сайта</b><span>Полное обновление интерфейса и структуры на Next.js с загрузкой не более 2,5 секунды на мобильном</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Базовая интеграция с МИС</b><span>Одностороннее обновление расписания врача каждые 5 минут — сайт всегда показывает актуальные слоты</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Приложение на 1 платформе</b><span>Нативное приложение на iOS или Android с базовой записью и push-напоминаниями</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Поддержка 1 месяц</b><span>Гарантийное устранение багов и консультации команды после запуска</span></div></li>
+        </ul>
+        <div class="price-foot">СРОК — 8 НЕДЕЛЬ</div>
+        <a href="#contact" class="btn btn-ghost" style="justify-content:center;">Выбрать пакет</a>
+      </div>
+
+      <div class="glass price-card mid reveal">
+        <div class="price-ribbon">Выбор 70% клиник</div>
+        <div>
+          <div class="price-tier">Бизнес</div>
+          <div class="price-for">Для сети от 5 до 20 филиалов, где расписание врачей меняется ежедневно, а поток пациентов требует надёжной синхронизации</div>
+        </div>
+        <div class="price-val">7 200 000 ₽</div>
+        <ul class="price-list">
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Сайт и приложение iOS/Android</b><span>Полный редизайн сайта и нативные приложения на обеих платформах в едином дизайн-языке</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Двусторонняя интеграция с МИС</b><span>Событийная синхронизация в реальном времени с задержкой не более 10 секунд</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Онлайн-оплата и телемедицина</b><span>СБП, банковский эквайринг и видеоконсультации на WebRTC прямо в приложении</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Админ-панель для персонала</b><span>Единая панель регистратуры: подтверждение, перенос записи, история пациента по всем филиалам</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Поддержка 3 месяца и обучение</b><span>Очные и онлайн-сессии обучения для администраторов всех филиалов сети</span></div></li>
+        </ul>
+        <div class="price-foot">СРОК — 12 НЕДЕЛЬ</div>
+        <a href="#contact" class="btn btn-primary" style="justify-content:center;">Выбрать пакет</a>
+      </div>
+
+      <div class="glass price-card reveal">
+        <div>
+          <div class="price-tier">Экосистема</div>
+          <div class="price-for">Для крупных сетей от 20 филиалов и медицинских холдингов, где решения принимаются на основе данных</div>
+        </div>
+        <div class="price-val">12 500 000 ₽</div>
+        <ul class="price-list">
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Всё из пакета «Бизнес»</b><span>Полный функционал сайта, приложений и интеграции с МИС</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>ИИ-ассистент подбора врача</b><span>Чат-бот на естественном языке помогает пациенту выбрать специалиста и предзаписаться без звонка</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Аналитический дашборд для руководства</b><span>LTV пациента, отток, загрузка врачей по часам и филиалам в одном интерфейсе</span></div></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><div><b>Выделенная команда на 12 месяцев</b><span>Постоянная команда сопровождения, приоритетные доработки и SLA 99,95%</span></div></li>
+        </ul>
+        <div class="price-foot">СРОК — 16 НЕДЕЛЬ</div>
+        <a href="#contact" class="btn btn-ghost" style="justify-content:center;">Выбрать пакет</a>
+      </div>
+    </div>
+
+    <div class="glass installment reveal">
+      <div class="inst-bar">
+        <div class="inst-seg">40% предоплата</div>
+        <div class="inst-seg">40% в разработке</div>
+        <div class="inst-seg">20% после запуска</div>
+      </div>
+      <div class="inst-caption">Рассрочка возможна на весь срок проекта. Для сетей от 30 филиалов и медицинских холдингов считаем условия индивидуально — напишите нам.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7 — TEAM & TRUST -->
+<section class="section" id="team">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Команда и доверие</div>
+      <h2 class="h2">Люди, которые уже разбираются в специфике медицинских данных</h2>
+      <p class="lead">Мы не учимся медицинской специфике за ваш счёт — стандарты хранения персональных данных пациента, интеграции с МИС и требования Минздрава давно часть нашей ежедневной работы.</p>
+    </div>
+
+    <div class="grid grid-5">
+      <div class="glass team-card reveal">
+        <div class="avatar" style="background:linear-gradient(135deg,#2fe0c6,#17a594);">АС</div>
+        <div><div class="team-name">Артём Соколов</div><div class="team-role">CEO, fullstack-архитектор</div></div>
+        <p class="team-bio">13 лет в разработке, экс-архитектор в Яндекс.Здоровье. Отвечает за архитектуру каждого проекта и техническую защиту решений перед клиентом.</p>
+      </div>
+      <div class="glass team-card reveal">
+        <div class="avatar" style="background:linear-gradient(135deg,#e8c072,#b98f4a);">МС</div>
+        <div><div class="team-name">Марина Северова</div><div class="team-role">Head of Design</div></div>
+        <p class="team-bio">9 лет в UX для медтеха, ранее — арт-директор в СБЕР Health. Проектирует интерфейсы, которыми легко пользуются и пациенты 70+, и администраторы регистратуры.</p>
+      </div>
+      <div class="glass team-card reveal">
+        <div class="avatar" style="background:linear-gradient(135deg,#79c9ff,#3a7bd5);">ДК</div>
+        <div><div class="team-name">Дмитрий Ковалёв</div><div class="team-role">Lead Backend Engineer</div></div>
+        <p class="team-bio">Специализируется на интеграциях с МИС и стандарте HL7/FHIR. Построил более 40 адаптеров под российские медицинские информационные системы.</p>
+      </div>
+      <div class="glass team-card reveal">
+        <div class="avatar" style="background:linear-gradient(135deg,#a3e066,#6fae37);">ЕТ</div>
+        <div><div class="team-name">Елена Тарасова</div><div class="team-role">Project & Compliance Manager</div></div>
+        <p class="team-bio">Ведёт проекты и следит за соответствием 152-ФЗ и требованиям к хранению медицинских данных на каждом этапе разработки.</p>
+      </div>
+      <div class="glass team-card reveal">
+        <div class="avatar" style="background:linear-gradient(135deg,#ff9d7a,#e85c3f);">ИП</div>
+        <div><div class="team-name">Игорь Панин</div><div class="team-role">Lead Mobile Engineer</div></div>
+        <p class="team-bio">iOS и Android-разработчик с 40+ приложениями в сторах. Отвечает за производительность и стабильность мобильных приложений под пиковую нагрузку.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="margin-top:56px;">
+      <div class="glass testi-card reveal">
+        <p>«Мы перестали терять пациентов на этапе записи. CoreTech остались с нами и после сдачи проекта — редкость для подрядчика такого уровня».</p>
+        <div class="testi-who">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#2fe0c6,#17a594);">НК</div>
+          <div><div class="testi-name">Наталья Ким</div><div class="testi-role">Директор по цифровому развитию, «Ваш Доктор»</div></div>
+        </div>
+      </div>
+      <div class="glass testi-card reveal">
+        <p>«Боялись, что интеграция с нашей МИС затянется на полгода — уложились в заявленные сроки, а тестирование на пилотном филиале сняло все вопросы у главных врачей других отделений».</p>
+        <div class="testi-who">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#e8c072,#b98f4a);">СВ</div>
+          <div><div class="testi-name">Сергей Волошин</div><div class="testi-role">Главный врач, медцентр «Пульс+»</div></div>
+        </div>
+      </div>
+      <div class="glass testi-card reveal">
+        <p>«Отдельно отмечу обучение персонала — администраторы всех филиалов реально разобрались в новой панели за один день, а не читали инструкцию неделями».</p>
+        <div class="testi-who">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#79c9ff,#3a7bd5);">ОР</div>
+          <div><div class="testi-name">Ольга Ремизова</div><div class="testi-role">Операционный директор, «ДокторРядом»</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust-strip reveal">
+      <div class="trust-lbl">Нам доверяют</div>
+      <div class="trust-logos">
+        <span>Ваш Доктор</span><span>Пульс+</span><span>ДокторРядом</span><span>МедЛайн Юг</span><span>Клиника Здоровье+</span>
+      </div>
+      <div class="compliance-row">
+        <div class="compliance-pill">152-ФЗ · защита персональных данных</div>
+        <div class="compliance-pill">ГОСТ Р 57580 · безопасность финансовых операций</div>
+        <div class="compliance-pill">HL7/FHIR-совместимые адаптеры</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8 — FOOTER / LEAD FORM -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="lead-grid">
+      <div class="reveal">
+        <div class="eyebrow">Следующий шаг</div>
+        <h2 class="h2">Обсудим вашу цифровую экосистему?</h2>
+        <p class="lead-lg" style="margin-top:20px;">Бесплатная 30-минутная стратегическая сессия с командой CoreTech: разберём путь пациента в вашей сети, найдём главные точки утечки и посчитаем ориентировочную смету — без обязательств.</p>
+        <div class="lead-trust">
+          <div class="lead-trust-item"><svg class="icon"><use href="#i-check"/></svg>Персональный аудит текущего сайта и приложения</div>
+          <div class="lead-trust-item"><svg class="icon"><use href="#i-check"/></svg>Расчёт потенциальной прибавки к выручке от онлайн-записи</div>
+          <div class="lead-trust-item"><svg class="icon"><use href="#i-check"/></svg>Предварительное ТЗ и смету пришлём в течение 2 рабочих дней</div>
+        </div>
+      </div>
+
+      <div class="glass form-card reveal">
+        <div class="form-body" id="formBody">
+          <div class="form-row">
+            <div class="field"><label>Имя</label><input type="text" placeholder="Как к вам обращаться" /></div>
+            <div class="field"><label>Телефон</label><input type="tel" placeholder="+7 (___) ___-__-__" /></div>
+          </div>
+          <div class="field"><label>Email</label><input type="email" placeholder="you@clinic.ru" /></div>
+          <div class="form-row">
+            <div class="field"><label>Название сети / клиники</label><input type="text" placeholder="Например, «МедЭксперт»" /></div>
+            <div class="field">
+              <label>Количество филиалов</label>
+              <select>
+                <option>1–4 филиала</option>
+                <option>5–20 филиалов</option>
+                <option>20+ филиалов / холдинг</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Что хотите обсудить</label><textarea placeholder="Коротко опишите задачу — сайт, приложение, интеграция с МИС или всё вместе"></textarea></div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" id="submitBtn" type="button">Отправить заявку<svg class="icon" style="width:16px;height:16px;"><use href="#i-arrow"/></svg></button>
+          <p class="form-note">Отправляя заявку, вы соглашаетесь на обработку персональных данных. Ответим в течение одного рабочего дня.</p>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <svg class="icon"><use href="#i-check"/></svg>
+          <div>
+            <div style="font-family:var(--font-display);font-size:20px;">Заявка отправлена</div>
+            <p style="font-size:15px;color:var(--text-dim);margin-top:8px;">Мы свяжемся с вами в течение одного рабочего дня, чтобы назначить стратегическую сессию.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:14px;"><i></i>CoreTech</div>
+          <p style="font-size:14.5px;color:var(--text-faint);line-height:1.6;max-width:280px;">IT-агентство полного цикла для сетей медицинских клиник. Сайты, приложения и интеграции с МИС, спроектированные вокруг пациента.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Навигация</div>
+          <div class="footer-links">
+            <a href="#pains">Проблема</a><a href="#solution">Решение</a><a href="#pricing">Тарифы</a><a href="#team">Команда</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Контакты</div>
+          <div class="footer-links">
+            <a href="tel:+74950000000"><svg class="icon"><use href="#i-phone"/></svg>+7 (495) 000-00-00</a>
+            <a href="mailto:partners@coretech.ru"><svg class="icon"><use href="#i-mail"/></svg>partners@coretech.ru</a>
+            <a href="#"><svg class="icon"><use href="#i-send"/></svg>@coretech_partners</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Офис</div>
+          <div class="footer-links">
+            <span>Москва, Пресненская наб., 12</span>
+            <span>Пн–Пт, 9:00–19:00 МСК</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 CoreTech. Все права защищены.</span>
+        <span style="display:flex;gap:20px;"><a href="#">Политика конфиденциальности</a><a href="#">Договор оферты</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<svg style="display:none" aria-hidden="true">
+<defs>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="20" r="1.2"/><circle cx="17" cy="20" r="1.2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L12 16.9 6.4 20.1l1.4-6.3L3 9.5l6.4-.6z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.8 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.8-4-9s1.5-6.4 4-9z"/></symbol>
+  <symbol id="i-app" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 19h4"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.6-5.7L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.6 5.7L4 16"/><path d="M4 20v-4h4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.3-.5-.8-.5-1.2 0-1.1.9-2 2-2h2a4 4 0 0 0 4-4c0-4-4-7.5-9-7.5z"/><circle cx="7.5" cy="12" r="1.1"/><circle cx="9.5" cy="8" r="1.1"/><circle cx="14.5" cy="8" r="1.1"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="M9 8l-5 4 5 4M15 8l5 4-5 4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2c3 2 5 6 5 10 0 2-1 4-2 5l-3 2-3-2c-1-1-2-3-2-5 0-4 2-8 5-10z"/><circle cx="12" cy="10" r="1.6"/><path d="M9 17l-2 4M15 17l2 4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12l6 6L20 6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 2A12 12 0 0 0 13 16.5l2-2.5 5 2v4a2 2 0 0 1-2 2C9.6 22 2 14.4 2 5a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7c-2.2 0-4 1.8-4 4v6h6v-6H7c0-1.1.9-2 2-2V7zm10 0c-2.2 0-4 1.8-4 4v6h6v-6h-2c0-1.1.9-2 2-2V7z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="8.5" r="2.4"/><path d="M15.5 14.3c2.7.5 4.5 2.6 4.5 5.7"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+</defs>
+</svg>
+
+<script>
+  // scroll progress
+  var navProgress = document.getElementById('navProgress');
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var scrolled = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    navProgress.style.width = scrolled + '%';
+  }
+  document.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // reveal on scroll
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold:0.12, rootMargin:'0px 0px -60px 0px' });
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // active nav link tracking
+  var navLinkEls = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+  var trackedSections = navLinkEls
+    .map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); })
+    .filter(Boolean);
+  if ('IntersectionObserver' in window && trackedSections.length){
+    var navIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        var link = navLinkEls.filter(function(a){ return a.getAttribute('href') === '#' + entry.target.id; })[0];
+        if (!link) return;
+        navLinkEls.forEach(function(a){ a.classList.remove('active'); });
+        link.classList.add('active');
+      });
+    }, { rootMargin:'-45% 0px -50% 0px', threshold:0 });
+    trackedSections.forEach(function(s){ navIO.observe(s); });
+  }
+
+  // lead form (client-side demo only, no backend)
+  var submitBtn = document.getElementById('submitBtn');
+  var formBody = document.getElementById('formBody');
+  var formSuccess = document.getElementById('formSuccess');
+  submitBtn.addEventListener('click', function(){
+    formBody.classList.add('hide');
+    formSuccess.classList.add('show');
+  });
+</script>
+</body>
+</html>
